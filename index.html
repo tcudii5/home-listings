@@ -22,9 +22,10 @@ main{max-width:1200px;margin:auto;padding:0 16px 48px;display:grid;gap:20px;grid
 <body>
 <header><h1>Homes For Sale</h1><p>Agent-listed properties. Tap an address to open it in Apple Maps.</p></header>
 <div class="bar">
-  <input id="q" placeholder="Search address or city">
+  <input id="city" value="Baltimore" placeholder="City"><input id="st" value="MD" maxlength="2" style="max-width:80px;min-width:60px"><input id="q" placeholder="Filter by street or zip">
   <select id="sort"><option value="lo">Price: low to high</option><option value="hi">Price: high to low</option></select>
 </div>
+<p id="note" style="max-width:1200px;margin:0 auto 12px;padding:0 16px;color:var(--muted)"></p>
 <main id="grid"></main>
 <script src="listings.js"></script>
 <script>
@@ -32,16 +33,26 @@ const grid=document.getElementById('grid'),q=document.getElementById('q'),sort=d
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 function render(){
   const term=q.value.toLowerCase();
-  const list=LISTINGS.filter(l=>l.address.toLowerCase().includes(term))
+  const list=DATA.filter(l=>l.address.toLowerCase().includes(term))
     .sort((a,b)=>sort.value==='lo'?a.price-b.price:b.price-a.price);
   grid.innerHTML=list.map(l=>`<article class="card">
     <img src="${esc(l.photo)}" alt="Photo of ${esc(l.address)}" loading="lazy">
     <div class="body"><div class="price">$${l.price.toLocaleString()}</div>
-    <div class="meta">${l.beds} bd · ${l.baths} ba · ${l.sqft.toLocaleString()} sqft</div>
+    <div class="meta">${l.beds??'–'} bd · ${l.baths??'–'} ba · ${l.sqft?l.sqft.toLocaleString()+' sqft':''}</div>
     <a class="addr" target="_blank" rel="noopener" href="https://maps.apple.com/?q=${encodeURIComponent(l.address)}">📍 ${esc(l.address)}</a>
-    <div class="agent">Listed by ${esc(l.agent)} · ${esc(l.brokerage)}</div></div></article>`).join('')||'<p>No matches.</p>';
+    <div class="agent">${l.agent?"Listed by "+esc(l.agent)+" · ":""}${esc(l.brokerage)}${l.url?` · <a target="_blank" rel="noopener" href="${esc(l.url)}">Details</a>`:""}</div></div></article>`).join('')||'<p>No matches.</p>';
 }
-q.oninput=sort.onchange=render;render();
+let DATA=LISTINGS;const note=document.getElementById('note'),city=document.getElementById('city'),st=document.getElementById('st');
+async function load(){
+  note.textContent='Loading live listings…';
+  try{
+    const r=await fetch(`/.netlify/functions/listings?city=${encodeURIComponent(city.value)}&state=${encodeURIComponent(st.value)}`);
+    const j=await r.json(); if(!r.ok||!j.listings) throw 0;
+    DATA=j.listings; note.textContent=`${DATA.length} homes for sale in ${city.value}, ${st.value.toUpperCase()}.`;
+  }catch(e){DATA=LISTINGS;note.textContent='Live feed not connected. Showing sample listings.';}
+  render();
+}
+city.onchange=st.onchange=load;q.oninput=sort.onchange=render;load();
 </script>
 </body>
 </html>
