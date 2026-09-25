@@ -27,7 +27,7 @@ const LISTINGS = [
   { address: "8 Stevenson Ct, Pikesville, MD 21208", price: 649000, beds: 5, baths: 3.5, sqft: 3300, agent: "Tom Reyes", brokerage: "Greenspring Estates", photo: "https://images.unsplash.com/photo-1592595896551-12b371d546d5?w=900&q=70" },
   { address: "2419 Eutaw Pl, Baltimore, MD 21217", price: 415000, beds: 4, baths: 3, sqft: 2700, agent: "Alicia Moreno", brokerage: "Charm City Realty", photo: "https://images.unsplash.com/photo-1575517111478-7f6afd0973db?w=900&q=70" },
   { address: "5800 Bellona Ave, Baltimore, MD 21212", price: 585000, beds: 4, baths: 2.5, sqft: 2600, agent: "Marcus Lee", brokerage: "Chesapeake Homes", photo: "https://images.unsplash.com/photo-1599427303058-f04cbcf4756f?w=900&q=70" },
-  { address: "11 Frederick Rd, Ellicott City, MD 21043", price: 529000, beds: 4, baths: 3, sqft: 2450, agent: "Sam Patel", brokerage: "Patapsco Realty", photo: "https://images.unsplash.com/photo-1554995207-c18c203602cb?w=900&q=70" },
+  { address: "11 Frederick Rd, Ellicott City, MD 21043", price: 529000, beds: 4, baths: 3, sqft: 2450, agent: "Sam Patel", brokerage: "Patapsco Realty", photo: "https://images.unsplash.com/photo-1570129477492-45c003edd2be?w=900&q=70" },
   { address: "3920 Dunnington Rd, Baltimore, MD 21229", price: 279000, beds: 3, baths: 2, sqft: 1550, agent: "Tasha Green", brokerage: "Charm City Realty", photo: "https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=900&q=70" },
   { address: "720 Dulaney Valley Rd, Towson, MD 21204", price: 819000, beds: 5, baths: 4.5, sqft: 4100, agent: "Claire Dunn", brokerage: "Greenspring Estates", photo: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=900&q=70" }
 ];
