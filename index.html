@@ -27,7 +27,6 @@ main{max-width:1200px;margin:auto;padding:0 16px 48px;display:grid;gap:20px;grid
 </div>
 <p id="note" style="max-width:1200px;margin:0 auto 12px;padding:0 16px;color:var(--muted)"></p>
 <main id="grid"></main>
-<script src="listings.js"></script>
 <script>
 const grid=document.getElementById('grid'),q=document.getElementById('q'),sort=document.getElementById('sort');
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -40,16 +39,16 @@ function render(){
     <div class="body"><div class="price">$${l.price.toLocaleString()}</div>
     <div class="meta">${l.beds??'–'} bd · ${l.baths??'–'} ba · ${l.sqft?l.sqft.toLocaleString()+' sqft':''}</div>
     <a class="addr" target="_blank" rel="noopener" href="https://maps.apple.com/?q=${encodeURIComponent(l.address)}">📍 ${esc(l.address)}</a>
-    <div class="agent">${l.agent?"Listed by "+esc(l.agent)+" · ":""}${esc(l.brokerage)}${l.url?` · <a target="_blank" rel="noopener" href="${esc(l.url)}">Details</a>`:""}</div></div></article>`).join('')||'<p>No matches.</p>';
+    <div class="agent">${l.agent?"Listed by "+esc(l.agent)+" · ":""}${esc(l.brokerage)}${l.url?` · <a target="_blank" rel="noopener" href="${esc(l.url)}">Details</a>`:""}</div></div></article>`).join('')||(DATA.length?'<p>No matches.</p>':'');
 }
-let DATA=LISTINGS;const note=document.getElementById('note'),region=document.getElementById('region'),NAMES={'':'the DMV',mont:'Montgomery County, MD',how:'Howard County, MD',dc:'Washington, DC',nova:'Northern Virginia'};
+let DATA=[];const note=document.getElementById('note'),region=document.getElementById('region'),NAMES={'':'the DMV',mont:'Montgomery County, MD',how:'Howard County, MD',dc:'Washington, DC',nova:'Northern Virginia'};
 async function load(){
   note.textContent='Loading live listings…';
   try{
     const r=await fetch(`/.netlify/functions/listings?region=${region.value}`);
     const j=await r.json(); if(!r.ok||!j.listings) throw 0;
     DATA=j.listings; note.textContent=`${DATA.length} townhomes for sale in ${NAMES[region.value]}.`;
-  }catch(e){DATA=LISTINGS.filter(l=>!region.value||l.region===region.value);note.textContent='Live feed not connected. Showing sample listings.';}
+  }catch(e){DATA=[];note.textContent='Live listings are not connected yet. Add the RAPIDAPI_KEY in Netlify to load real townhomes.';}
   render();
 }
 region.onchange=load;q.oninput=sort.onchange=render;load();
