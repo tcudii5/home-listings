@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Homes For Sale</title>
+<style>
+:root{--bg:#f6f5f2;--card:#fff;--ink:#1c1c1c;--muted:#6b6b6b;--accent:#1f5f4a}
+*{box-sizing:border-box}body{margin:0;font-family:-apple-system,system-ui,Segoe UI,sans-serif;background:var(--bg);color:var(--ink)}
+header{padding:32px 16px 8px;max-width:1200px;margin:auto}h1{margin:0 0 4px;font-size:2rem}
+header p{margin:0;color:var(--muted)}
+.bar{max-width:1200px;margin:16px auto;padding:0 16px;display:flex;gap:10px;flex-wrap:wrap}
+.bar input,.bar select{padding:10px 12px;border:1px solid #ccc;border-radius:8px;font-size:1rem;flex:1;min-width:160px}
+main{max-width:1200px;margin:auto;padding:0 16px 48px;display:grid;gap:20px;grid-template-columns:repeat(auto-fill,minmax(300px,1fr))}
+.card{background:var(--card);border-radius:12px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.card img{width:100%;aspect-ratio:3/2;object-fit:cover;display:block;background:#ddd}
+.body{padding:14px 16px}.price{font-size:1.4rem;font-weight:700}
+.meta{color:var(--muted);margin:4px 0 8px}
+.addr{color:var(--accent);font-weight:600;text-decoration:none}.addr:hover{text-decoration:underline}
+.agent{font-size:.85rem;color:var(--muted);margin-top:8px;border-top:1px solid #eee;padding-top:8px}
+</style>
+</head>
+<body>
+<header><h1>Homes For Sale</h1><p>Agent-listed properties. Tap an address to open it in Apple Maps.</p></header>
+<div class="bar">
+  <input id="q" placeholder="Search address or city">
+  <select id="sort"><option value="lo">Price: low to high</option><option value="hi">Price: high to low</option></select>
+</div>
+<main id="grid"></main>
+<script src="listings.js"></script>
+<script>
+const grid=document.getElementById('grid'),q=document.getElementById('q'),sort=document.getElementById('sort');
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function render(){
+  const term=q.value.toLowerCase();
+  const list=LISTINGS.filter(l=>l.address.toLowerCase().includes(term))
+    .sort((a,b)=>sort.value==='lo'?a.price-b.price:b.price-a.price);
+  grid.innerHTML=list.map(l=>`<article class="card">
+    <img src="${esc(l.photo)}" alt="Photo of ${esc(l.address)}" loading="lazy">
+    <div class="body"><div class="price">$${l.price.toLocaleString()}</div>
+    <div class="meta">${l.beds} bd · ${l.baths} ba · ${l.sqft.toLocaleString()} sqft</div>
+    <a class="addr" target="_blank" rel="noopener" href="https://maps.apple.com/?q=${encodeURIComponent(l.address)}">📍 ${esc(l.address)}</a>
+    <div class="agent">Listed by ${esc(l.agent)} · ${esc(l.brokerage)}</div></div></article>`).join('')||'<p>No matches.</p>';
+}
+q.oninput=sort.onchange=render;render();
+</script>
+</body>
+</html>
