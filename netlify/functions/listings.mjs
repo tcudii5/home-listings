@@ -7,6 +7,7 @@ export default async (req) => {
   const REGIONS = {
     mont: [["Bethesda","MD"],["Rockville","MD"],["Silver Spring","MD"],["Gaithersburg","MD"],["Potomac","MD"]],
     how: [["Columbia","MD"],["Ellicott City","MD"],["Clarksville","MD"]],
+    dc: [["Washington","DC"]],
     nova: [["Arlington","VA"],["Alexandria","VA"],["Fairfax","VA"],["Reston","VA"],["McLean","VA"]],
   };
   const region = u.searchParams.get("region");
@@ -21,7 +22,7 @@ async function search(key, city, state) {
   const res = await fetch("https://realty-in-us.p.rapidapi.com/properties/v3/list", {
     method: "POST",
     headers: { "content-type": "application/json", "x-rapidapi-key": key, "x-rapidapi-host": "realty-in-us.p.rapidapi.com" },
-    body: JSON.stringify({ limit: 40, offset: 0, city, state_code: state, status: ["for_sale"], sort: { direction: "desc", field: "list_date" } }),
+    body: JSON.stringify({ limit: 40, offset: 0, city, state_code: state, status: ["for_sale"], type: ["townhomes"], sort: { direction: "desc", field: "list_date" } }),
   });
   if (!res.ok) return null;
   const data = await res.json();
