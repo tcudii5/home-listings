@@ -9,7 +9,7 @@ export default async (req) => {
   const res = await fetch("https://realty-in-us.p.rapidapi.com/properties/v3/list", {
     method: "POST",
     headers: { "content-type": "application/json", "x-rapidapi-key": key, "x-rapidapi-host": "realty-in-us.p.rapidapi.com" },
-    body: JSON.stringify({ limit: 42, offset: 0, city, state_code: state, status: ["for_sale"], sort: { direction: "desc", field: "list_date" } }),
+    body: JSON.stringify({ limit: 200, offset: 0, city, state_code: state, status: ["for_sale"], sort: { direction: "desc", field: "list_date" } }),
   });
   if (!res.ok) return Response.json({ error: "upstream", status: res.status }, { status: 502 });
   const data = await res.json();
